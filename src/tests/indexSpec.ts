@@ -1,6 +1,7 @@
 import supertest from 'supertest';
 import app from '../index';
 import * as fs from 'fs';
+import utils from '../Utils/utils';
 
 const request = supertest(app.app);
 //Failed cases
@@ -47,5 +48,19 @@ it('Image resized and saved', async () => {
   fs.stat('./thumb/cat-121-121.jpg', (err: NodeJS.ErrnoException | null) => {
     expect(response.status).toBe(200);
     expect(err).toBe(null);
+  });
+});
+
+describe('Test image processing method', () => {
+  it('find image with resizing', async () => {
+    utils.ProcessImage('image', '121', '123').then((imagePath) => {
+      expect(imagePath).toBe('./thumb/image-121-123.jpg');
+    });
+  });
+
+  it('find image without resizing', async () => {
+    utils.ProcessImage('image', null, null).then((imagePath) => {
+      expect(imagePath).toBe('./Full/image.jpg');
+    });
   });
 });

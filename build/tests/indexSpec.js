@@ -29,6 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const index_1 = __importDefault(require("../index"));
 const fs = __importStar(require("fs"));
+const utils_1 = __importDefault(require("../Utils/utils"));
 const request = (0, supertest_1.default)(index_1.default.app);
 //Failed cases
 describe('Test failed endpoint responses', () => {
@@ -71,5 +72,17 @@ it('Image resized and saved', async () => {
     fs.stat('./thumb/cat-121-121.jpg', (err) => {
         expect(response.status).toBe(200);
         expect(err).toBe(null);
+    });
+});
+describe('Test image processing method', () => {
+    it('find image with resizing', async () => {
+        utils_1.default.ProcessImage('image', '121', '123').then(imagePath => {
+            expect(imagePath).toBe('./thumb/image-121-123.jpg');
+        });
+    });
+    it('find image without resizing', async () => {
+        utils_1.default.ProcessImage('image', null, null).then(imagePath => {
+            expect(imagePath).toBe('./Full/image.jpg');
+        });
     });
 });
